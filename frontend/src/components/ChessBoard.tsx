@@ -19,8 +19,18 @@ export const ChessBoard = ({ chess, board, socket, setBoard }  : {
 
     const [ from ,setFrom ] = useState<null | Square>(null);
     
+    const getPieceUnicode = (type: PieceSymbol, color: Color) => {
+        const unicodeMap: Record<PieceSymbol, { w: string; b: string }> = {
+            p: { w: "♙", b: "♟" },
+            r: { w: "♖", b: "♜" },
+            n: { w: "♘", b: "♞" },
+            b: { w: "♗", b: "♝" },
+            q: { w: "♕", b: "♛" },
+            k: { w: "♔", b: "♚" },
+        };
+        return unicodeMap[type][color];
 
-
+    }
     return <div className="text-back ">
         
         
@@ -59,12 +69,14 @@ export const ChessBoard = ({ chess, board, socket, setBoard }  : {
 
                              }
                              
-                        }} key={j} className={`w-20 h-20    ${(i+j)%2 === 0 ? 'bg-lime-700' : 'bg-yellow-100'}`}>
+                        }} key={j} className={`w-20 h-20    ${(i+j)%2 === 0 ? 'bg-green-700' : 'bg-yellow-100'}`}>
                             <div className="w-full justify-center flex h-full">
                                 <div className="h-full justify-center flex flex-col">
-                                {square ?<img className="w-4" src={`/${square?.color === "b" ?
-                                square.type : `${square?.type?.toUpperCase()} copy`}.png`}/> :
-                                null }
+                                {square ? (
+                                            <span className="text-5xl">
+                                                {getPieceUnicode(square.type, square.color)}
+                                            </span>
+                                        ) : null}
                                 </div>
                                 </div>
                            
