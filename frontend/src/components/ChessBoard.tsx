@@ -6,17 +6,15 @@ import { MOVE } from "../pages/Game";
 
 
 
-export const ChessBoard = ({ chess,board, socket, setBoard }  : {
+export const ChessBoard = ({ chess, board, socket, setBoard }  : {
     chess : any;
     setBoard : any ;
-    board : (
-        |{
+    board : ({
         square : Square;
         type : PieceSymbol;
         color: Color;
-    } | null
-) [][];
-  socket : WebSocket | null
+    } | null)[][];
+  socket : WebSocket 
 }) => {
 
     const [ from ,setFrom ] = useState<null | Square>(null);
@@ -25,18 +23,20 @@ export const ChessBoard = ({ chess,board, socket, setBoard }  : {
 
     return <div className="text-back ">
         
+        
            {board.map((row , i) => {
             return <div key ={i} className="flex ">
                 {
                     row.map((square , j) => {
-                        const squareRepresentation = String.fromCharCode( 97 +(j % 8)) +""+ (8 - i) as Square;
-                        console.log(squareRepresentation)
+                        const squareRepresentation = String.fromCharCode( 97 +(j % 8)) + "" + (8 - i) as Square;
+                        
+
                         return <div onClick={() => {
                              if(!from) {
                                 setFrom(squareRepresentation);
                              } else {
                                 
-                                socket?.send(JSON.stringify({
+                                socket.send(JSON.stringify({
                                     type : MOVE,
                                     payload: {
                                         move : {
@@ -52,7 +52,6 @@ export const ChessBoard = ({ chess,board, socket, setBoard }  : {
                                     to : squareRepresentation
                                 });
                                 setBoard(chess.board())
-
                                 console.log({
                                     from , 
                                     to  : squareRepresentation
@@ -63,7 +62,9 @@ export const ChessBoard = ({ chess,board, socket, setBoard }  : {
                         }} key={j} className={`w-20 h-20    ${(i+j)%2 === 0 ? 'bg-lime-700' : 'bg-yellow-100'}`}>
                             <div className="w-full justify-center flex h-full">
                                 <div className="h-full justify-center flex flex-col">
-                                {square ? square.type : ""}
+                                {square ?<img className="w-4" src={`/${square?.color === "b" ?
+                                square.type : `${square?.type?.toUpperCase()} copy`}.png`}/> :
+                                null }
                                 </div>
                                 </div>
                            

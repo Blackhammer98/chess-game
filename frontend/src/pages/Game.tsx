@@ -13,7 +13,10 @@ export const GAME_OVER = "GAME_OVER";
 export const Game = () => {
 const socket = useSocket()
     const [chess , setChess] = useState(new Chess());
-    const [board , setBoard] = useState(chess.board())
+    const [board , setBoard] = useState(chess.board());
+    const [started , setStarted] = useState(false)
+
+
     useEffect(() => {
          if(!socket) {
             return;
@@ -23,7 +26,8 @@ const socket = useSocket()
           
            switch (message.type){
             case INIT_GAME : 
-            setBoard(chess.board())
+            setBoard(chess.board());
+            setStarted(true);
             
             break;
             case MOVE : 
@@ -39,12 +43,13 @@ const socket = useSocket()
 
            }
          }
-    },[socket])
-    if(!socket){
-        <div>
+    },[socket]);
+
+    if(!socket)
+        return <div>
             Connecting....
         </div>
-    }
+    
 
     return <div className="flex justify-center">
         <div className="pt-8 max-w-screen-lg w-full">
@@ -54,13 +59,13 @@ const socket = useSocket()
                </div>
                <div className="col-span-2  w-full flex justify-center">  
                    <div className="pt-20">
-                    <Button onClick={() => {
-                         socket?.send(JSON.stringify({
+                    {!started && <Button onClick={() => {
+                         socket.send(JSON.stringify({
                             type : INIT_GAME
                         }))
                                  }}>
                             Play
-                    </Button>
+                    </Button>}
                    </div>
                    
                 

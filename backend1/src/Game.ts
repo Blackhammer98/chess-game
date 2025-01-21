@@ -54,7 +54,14 @@ export class Game {
         }
         console.log("move succeded")
         if(this.board.isGameOver()) {
-            this.player1.send(JSON.stringify({
+            //Send message to both players
+            this.player1.emit(JSON.stringify({
+                type : GAME_OVER,
+                payload : {
+                    winner : this.board.turn() === "w" ? "black" : "white"
+                }
+            }))
+            this.player2.emit(JSON.stringify({
                 type : GAME_OVER,
                 payload : {
                     winner : this.board.turn() === "w" ? "black" : "white"
@@ -63,7 +70,7 @@ export class Game {
             return;
         }
          console.log(this.board.moves().length % 2 )
-        if(this.board.moves().length % 2 === 0) {
+        if(this.moveCount % 2 === 0) {
             console.log("sent1")
             this.player2.send(JSON.stringify({
                 type : MOVE,

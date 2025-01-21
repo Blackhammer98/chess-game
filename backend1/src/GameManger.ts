@@ -34,7 +34,7 @@ export class GameManger {
                if(this.pendingUser){
                 const game = new Game(this.pendingUser , socket)
                 this.games.push(game);
-                this.pendingUser = null
+                this.pendingUser = null;
 
                }else{
                 this.pendingUser = socket;
